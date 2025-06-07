@@ -25,7 +25,7 @@ public class VisitanteService {
     }
 
     @Transactional
-    public VisitanteDTO.Response createVisitante(VisitanteDTO.Create dto) {
+    public VisitanteDTO.VisitanteResponse createVisitante(VisitanteDTO.CreateVisitante dto) {
         User user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não é VISITANTE"));
         
@@ -43,13 +43,13 @@ public class VisitanteService {
         return toDto(saved);
     }
 
-    public List<VisitanteDTO.Response> getAll() {
+    public List<VisitanteDTO.VisitanteResponse> getAll() {
         return visitanteRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public VisitanteDTO.Response getById(Long id) {
+    public VisitanteDTO.VisitanteResponse getById(Long id) {
         return visitanteRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> new RuntimeException("Visitante não encontrado"));
@@ -64,7 +64,7 @@ public class VisitanteService {
     }
 
     @Transactional
-    public VisitanteDTO.Response updateVisitante(Long id, VisitanteDTO.Update dto) {
+    public VisitanteDTO.VisitanteResponse updateVisitante(Long id, VisitanteDTO.UpdateVisitante dto) {
         Visitante visitante = visitanteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visitante não encontrado"));
 
@@ -80,8 +80,8 @@ public class VisitanteService {
         return toDto(updated);
     }
 
-    private VisitanteDTO.Response toDto(Visitante visitante) {
-        return new VisitanteDTO.Response(
+    private VisitanteDTO.VisitanteResponse toDto(Visitante visitante) {
+        return new VisitanteDTO.VisitanteResponse(
                 visitante.getId(),
                 visitante.getUser().getId(),
                 visitante.getUser().getEmail(),

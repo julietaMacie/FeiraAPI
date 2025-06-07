@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.services;
 
 import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO.Response;
+import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO.EstandeResponse;
 import com.MacieNhangumele.FeiraAPI.models.Estande;
 import com.MacieNhangumele.FeiraAPI.models.Expositor;
 import com.MacieNhangumele.FeiraAPI.repositories.EstandeRepository;
@@ -23,7 +23,7 @@ public class EstandeService {
     }
 
     @Transactional
-    public Response createEstande(EstandeDTO.Create dto) {
+    public EstandeResponse createEstande(EstandeDTO.CreateEstande dto) {
         Estande estande = Estande.builder()
                 .localizacao(dto.localizacao())
                 .status(dto.status())
@@ -35,8 +35,8 @@ public class EstandeService {
         return toDto(saved);
     }
 
-    private EstandeDTO.Response toDto(Estande estande) {
-    return new EstandeDTO.Response(
+    private EstandeDTO.EstandeResponse toDto(Estande estande) {
+    return new EstandeDTO.EstandeResponse(
         estande.getId(),
         estande.getLocalizacao(),
         estande.getStatus(),
@@ -45,13 +45,13 @@ public class EstandeService {
     );
 }
 
-    public List<Response> getAll() {
+    public List<EstandeResponse> getAll() {
         return estandeRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public Response getById(Long id) {
+    public EstandeResponse getById(Long id) {
         return estandeRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> new RuntimeException("Estande não encontrado"));
@@ -66,7 +66,7 @@ public class EstandeService {
     }
 
     @Transactional
-    public Response updateEstande(Long id, EstandeDTO.Update dto) {
+    public EstandeResponse updateEstande(Long id, EstandeDTO.UpdateEstande dto) {
         Estande estande = estandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estande não encontrado"));
 

@@ -15,7 +15,7 @@ public class InscricaoEvento {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evento_id", nullable = false)
-    private Evento evento;
+    private Feira evento;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visitante_id", nullable = false)

@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
 import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteDTO.Response;
+import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteDTO.VisitanteResponse;
 import com.MacieNhangumele.FeiraAPI.services.VisitanteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +19,25 @@ public class VisitanteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VisitanteDTO.Response>> getAll() {
+    public ResponseEntity<List<VisitanteDTO.VisitanteResponse>> getAll() {
         return ResponseEntity.ok(visitanteService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VisitanteDTO.Response> getById(@PathVariable Long id) {
+    public ResponseEntity<VisitanteDTO.VisitanteResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(visitanteService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Response> create(
-            @RequestBody @Valid VisitanteDTO.Create dto) {
+    public ResponseEntity<VisitanteResponse> create(
+            @RequestBody @Valid VisitanteDTO.CreateVisitante dto) {
         return ResponseEntity.ok(visitanteService.createVisitante(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(
+    public ResponseEntity<VisitanteResponse> update(
             @PathVariable Long id,
-            @RequestBody @Valid VisitanteDTO.Update dto) {
+            @RequestBody @Valid VisitanteDTO.UpdateVisitante dto) {
         return ResponseEntity.ok(visitanteService.updateVisitante(id, dto));
     }
 

@@ -1,10 +1,10 @@
 package com.MacieNhangumele.FeiraAPI.services;
 
 import com.MacieNhangumele.FeiraAPI.DTOs.InscricaoDTO;
-import com.MacieNhangumele.FeiraAPI.models.Evento;
+import com.MacieNhangumele.FeiraAPI.models.Feira;
 import com.MacieNhangumele.FeiraAPI.models.InscricaoEvento;
 import com.MacieNhangumele.FeiraAPI.models.Visitante;
-import com.MacieNhangumele.FeiraAPI.repositories.EventoRepository;
+import com.MacieNhangumele.FeiraAPI.repositories.FeiraRepository;
 import com.MacieNhangumele.FeiraAPI.repositories.InscricaoEventoRepository;
 import com.MacieNhangumele.FeiraAPI.repositories.VisitanteRepository;
 import jakarta.transaction.Transactional;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class InscricaoEventoService {
     private final InscricaoEventoRepository repository;
-    private final EventoRepository eventoRepository;
+    private final FeiraRepository eventoRepository;
     private final VisitanteRepository visitanteRepository;
 
     public InscricaoEventoService(InscricaoEventoRepository repository,
-                                EventoRepository eventoRepository,
+                                FeiraRepository eventoRepository,
                                 VisitanteRepository visitanteRepository) {
         this.repository = repository;
         this.eventoRepository = eventoRepository;
@@ -32,7 +32,7 @@ public class InscricaoEventoService {
             throw new RuntimeException("Visitante já inscrito neste evento");
         }
         
-        Evento evento = eventoRepository.findById(dto.eventoId())
+        Feira evento = eventoRepository.findById(dto.eventoId())
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
         
         Visitante visitante = visitanteRepository.findById(dto.visitanteId())

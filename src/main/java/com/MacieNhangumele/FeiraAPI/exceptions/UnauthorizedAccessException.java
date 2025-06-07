@@ -1,4 +1,4 @@
-package com.MacieNhangumele.FeiraAPI.exeptions;
+package com.MacieNhangumele.FeiraAPI.exceptions;
 
 public class UnauthorizedAccessException {
     

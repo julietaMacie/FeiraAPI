@@ -4,18 +4,18 @@ import jakarta.validation.constraints.NotBlank;
 
 public class VisitanteDTO {
 
-    public record Create(
+    public record CreateVisitante(
         @NotBlank Long userId,
         @NotBlank String nome,
         @NotBlank String tipoAcesso
     ) {}
     
-    public record Update(
+    public record UpdateVisitante(
         @NotBlank String nome,
         @NotBlank String tipoAcesso
     ) {}
     
-    public record Response(
+    public record VisitanteResponse(
         Long id,
         Long userId,
         String userEmail,

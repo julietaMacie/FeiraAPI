@@ -23,7 +23,7 @@ public class ExpositorService {
     }
 
     @Transactional
-    public ExpositorDTO.Response createExpositor(ExpositorDTO.Create dto) {
+    public ExpositorDTO.ExpositorResponse createExpositor(ExpositorDTO.CreateExpositor dto) {
         User user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não é EXPOSITOR"));
         
@@ -43,13 +43,13 @@ public class ExpositorService {
         return toDto(saved);
     }
 
-    public List<ExpositorDTO.Response> getAll() {
+    public List<ExpositorDTO.ExpositorResponse> getAll() {
         return expositorRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public ExpositorDTO.Response getById(Long id) {
+    public ExpositorDTO.ExpositorResponse getById(Long id) {
         return expositorRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
@@ -64,7 +64,7 @@ public class ExpositorService {
     }
 
     @Transactional
-    public ExpositorDTO.Response updateExpositor(Long id, ExpositorDTO.Update dto) {
+    public ExpositorDTO.ExpositorResponse updateExpositor(Long id, ExpositorDTO.UpdateExpositor dto) {
         Expositor expositor = expositorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
 
@@ -83,8 +83,8 @@ public class ExpositorService {
         return toDto(updated);
     }
 
-    private ExpositorDTO.Response toDto(Expositor expositor) {
-        return new ExpositorDTO.Response(
+    private ExpositorDTO.ExpositorResponse toDto(Expositor expositor) {
+        return new ExpositorDTO.ExpositorResponse(
                 expositor.getId(),
                 expositor.getUser().getId(),
                 expositor.getUser().getEmail(),
