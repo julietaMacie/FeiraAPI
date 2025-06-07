@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewVisitanteDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteDTO.Response;
 import com.MacieNhangumele.FeiraAPI.services.VisitanteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,33 +19,30 @@ public class VisitanteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VisitanteResponseDTO>> getAllVisitantes() {
-        List<VisitanteResponseDTO> visitantes = visitanteService.getAll();
-        return ResponseEntity.ok(visitantes);
+    public ResponseEntity<List<VisitanteDTO.Response>> getAll() {
+        return ResponseEntity.ok(visitanteService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VisitanteResponseDTO> getVisitanteById(@PathVariable Long id) {
-        VisitanteResponseDTO visitante = visitanteService.getById(id);
-        return ResponseEntity.ok(visitante);
+    public ResponseEntity<VisitanteDTO.Response> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(visitanteService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<VisitanteResponseDTO> createVisitante(@RequestBody @Valid NewVisitanteDTO dto) {
-        VisitanteResponseDTO newVisitante = visitanteService.createVisitante(dto);
-        return ResponseEntity.ok(newVisitante);
+    public ResponseEntity<Response> create(
+            @RequestBody @Valid VisitanteDTO.Create dto) {
+        return ResponseEntity.ok(visitanteService.createVisitante(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VisitanteResponseDTO> updateVisitante(
+    public ResponseEntity<Response> update(
             @PathVariable Long id,
-            @RequestBody @Valid NewVisitanteDTO dto) {
-        VisitanteResponseDTO updatedVisitante = visitanteService.updateVisitante(id, dto);
-        return ResponseEntity.ok(updatedVisitante);
+            @RequestBody @Valid VisitanteDTO.Update dto) {
+        return ResponseEntity.ok(visitanteService.updateVisitante(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVisitante(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         visitanteService.deleteVisitante(id);
         return ResponseEntity.noContent().build();
     }

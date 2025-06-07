@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.EventoResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewEventoDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.EventoDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.EventoDTO.Response;
 import com.MacieNhangumele.FeiraAPI.services.EventoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,33 +19,30 @@ public class EventoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EventoResponseDTO>> getAllEventos() {
-        List<EventoResponseDTO> eventos = eventoService.getAll();
-        return ResponseEntity.ok(eventos);
+    public ResponseEntity<List<EventoDTO.Response>> getAll() {
+        return ResponseEntity.ok(eventoService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventoResponseDTO> getEventoById(@PathVariable Long id) {
-        EventoResponseDTO evento = eventoService.getById(id);
-        return ResponseEntity.ok(evento);
+    public ResponseEntity<EventoDTO.Response> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(eventoService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<EventoResponseDTO> createEvento(@RequestBody @Valid NewEventoDTO dto) {
-        EventoResponseDTO newEvento = eventoService.createEvento(dto);
-        return ResponseEntity.ok(newEvento);
+    public ResponseEntity<Response> create(
+            @RequestBody @Valid EventoDTO.Create dto) {
+        return ResponseEntity.ok(eventoService.createEvento(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventoResponseDTO> updateEvento(
+    public ResponseEntity<Response> update(
             @PathVariable Long id,
-            @RequestBody @Valid NewEventoDTO dto) {
-        EventoResponseDTO updatedEvento = eventoService.updateEvento(id, dto);
-        return ResponseEntity.ok(updatedEvento);
+            @RequestBody @Valid EventoDTO.Update dto) {
+        return ResponseEntity.ok(eventoService.updateEvento(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvento(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         eventoService.deleteEvento(id);
         return ResponseEntity.noContent().build();
     }

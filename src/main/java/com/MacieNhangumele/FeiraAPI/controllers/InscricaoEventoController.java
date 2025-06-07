@@ -1,7 +1,6 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.InscricaoEventoResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewInscricaoEventoDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.InscricaoDTO;
 import com.MacieNhangumele.FeiraAPI.services.InscricaoEventoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,50 +11,43 @@ import java.util.List;
 @RequestMapping("/inscricoes")
 public class InscricaoEventoController {
     
-    private final InscricaoEventoService inscricaoEventoService;
+    private final InscricaoEventoService service;
 
-    public InscricaoEventoController(InscricaoEventoService inscricaoEventoService) {
-        this.inscricaoEventoService = inscricaoEventoService;
+    public InscricaoEventoController(InscricaoEventoService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<InscricaoEventoResponseDTO>> getAllInscricoes() {
-        List<InscricaoEventoResponseDTO> inscricoes = inscricaoEventoService.getAll();
-        return ResponseEntity.ok(inscricoes);
+    public ResponseEntity<List<InscricaoDTO.Response>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InscricaoEventoResponseDTO> getInscricaoById(@PathVariable Long id) {
-        InscricaoEventoResponseDTO inscricao = inscricaoEventoService.getById(id);
-        return ResponseEntity.ok(inscricao);
+    public ResponseEntity<InscricaoDTO.Response> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<InscricaoEventoResponseDTO> createInscricao(
-            @RequestBody @Valid NewInscricaoEventoDTO dto) {
-        InscricaoEventoResponseDTO newInscricao = inscricaoEventoService.createInscricao(dto);
-        return ResponseEntity.ok(newInscricao);
+    public ResponseEntity<InscricaoDTO.Response> create(
+            @RequestBody @Valid InscricaoDTO.Create dto) {
+        return ResponseEntity.ok(service.createInscricao(dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInscricao(@PathVariable Long id) {
-        inscricaoEventoService.deleteInscricao(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteInscricao(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/evento/{eventoId}")
-    public ResponseEntity<List<InscricaoEventoResponseDTO>> getInscricoesByEvento(
+    public ResponseEntity<List<InscricaoDTO.Response>> getByEvento(
             @PathVariable Long eventoId) {
-        List<InscricaoEventoResponseDTO> inscricoes = 
-                inscricaoEventoService.getByEventoId(eventoId);
-        return ResponseEntity.ok(inscricoes);
+        return ResponseEntity.ok(service.getByEventoId(eventoId));
     }
 
     @GetMapping("/visitante/{visitanteId}")
-    public ResponseEntity<List<InscricaoEventoResponseDTO>> getInscricoesByVisitante(
+    public ResponseEntity<List<InscricaoDTO.Response>> getByVisitante(
             @PathVariable Long visitanteId) {
-        List<InscricaoEventoResponseDTO> inscricoes = 
-                inscricaoEventoService.getByVisitanteId(visitanteId);
-        return ResponseEntity.ok(inscricoes);
+        return ResponseEntity.ok(service.getByVisitanteId(visitanteId));
     }
 }

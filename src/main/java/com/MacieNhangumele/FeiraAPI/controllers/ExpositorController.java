@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.ExpositorResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewExpositorDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.ExpositorDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.ExpositorDTO.Response;
 import com.MacieNhangumele.FeiraAPI.services.ExpositorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,29 +19,28 @@ public class ExpositorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExpositorResponseDTO>> getAllExpositores() {
-        List<ExpositorResponseDTO> expositores = expositorService.getAll();
-        return ResponseEntity.ok(expositores);
+    public ResponseEntity<List<Response>> getAllExpositores() {
+        return ResponseEntity.ok(expositorService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExpositorResponseDTO> getExpositorById(@PathVariable Long id) {
-        ExpositorResponseDTO expositor = expositorService.getById(id);
-        return ResponseEntity.ok(expositor);
+    public ResponseEntity<Response> getExpositorById(@PathVariable Long id) {
+        return ResponseEntity.ok(expositorService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ExpositorResponseDTO> createExpositor(@RequestBody @Valid NewExpositorDTO dto) {
-        ExpositorResponseDTO newExpositor = expositorService.createExpositor(dto);
-        return ResponseEntity.ok(newExpositor);
+    public ResponseEntity<Response> createExpositor(
+            @RequestBody @Valid ExpositorDTO.Create dto) {
+        
+        return ResponseEntity.ok(expositorService.createExpositor(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExpositorResponseDTO> updateExpositor(
+    public ResponseEntity<Response> updateExpositor(
             @PathVariable Long id,
-            @RequestBody @Valid NewExpositorDTO dto) {
-        ExpositorResponseDTO updatedExpositor = expositorService.updateExpositor(id, dto);
-        return ResponseEntity.ok(updatedExpositor);
+            @RequestBody @Valid ExpositorDTO.Update dto) {
+        
+        return ResponseEntity.ok(expositorService.updateExpositor(id, dto));
     }
 
     @DeleteMapping("/{id}")

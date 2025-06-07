@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.EstandeResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewEstandeDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO.Response;
 import com.MacieNhangumele.FeiraAPI.services.EstandeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,33 +19,30 @@ public class EstandeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EstandeResponseDTO>> getAllEstandes() {
-        List<EstandeResponseDTO> estandes = estandeService.getAll();
-        return ResponseEntity.ok(estandes);
+    public ResponseEntity<List<Response>> getAll() {
+        return ResponseEntity.ok(estandeService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EstandeResponseDTO> getEstandeById(@PathVariable Long id) {
-        EstandeResponseDTO estande = estandeService.getById(id);
-        return ResponseEntity.ok(estande);
+    public ResponseEntity<Response> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(estandeService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<EstandeResponseDTO> createEstande(@RequestBody @Valid NewEstandeDTO dto) {
-        EstandeResponseDTO newEstande = estandeService.createEstande(dto);
-        return ResponseEntity.ok(newEstande);
+    public ResponseEntity<Response> create(
+            @RequestBody @Valid EstandeDTO.Create dto) {
+        return ResponseEntity.ok(estandeService.createEstande(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EstandeResponseDTO> updateEstande(
+    public ResponseEntity<Response> update(
             @PathVariable Long id,
-            @RequestBody @Valid NewEstandeDTO dto) {
-        EstandeResponseDTO updatedEstande = estandeService.updateEstande(id, dto);
-        return ResponseEntity.ok(updatedEstande);
+            @RequestBody @Valid EstandeDTO.Update dto) {
+        return ResponseEntity.ok(estandeService.updateEstande(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEstande(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         estandeService.deleteEstande(id);
         return ResponseEntity.noContent().build();
     }
