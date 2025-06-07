@@ -18,6 +18,9 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
     
+    @Value("${api.security.token.expiration-hours}")
+    private int expirationHours;
+
     public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -32,7 +35,7 @@ public class TokenService {
             throw new RuntimeException("Error while generating token", exception);
         }
     }
-    
+
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -47,6 +50,6 @@ public class TokenService {
     }
     
     private Instant genExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(expirationHours).toInstant(ZoneOffset.of("-03:00"));
     }
 }
