@@ -1,8 +1,8 @@
 package com.MacieNhangumele.FeiraAPI.services;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.ExpositorResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewExpositorDTO;
+import com.MacieNhangumele.FeiraAPI.DTOs.ExpositorDTO;
 import com.MacieNhangumele.FeiraAPI.models.Expositor;
+import com.MacieNhangumele.FeiraAPI.models.Role;
 import com.MacieNhangumele.FeiraAPI.models.User;
 import com.MacieNhangumele.FeiraAPI.repositories.ExpositorRepository;
 import com.MacieNhangumele.FeiraAPI.repositories.UserRepository;
@@ -22,66 +22,76 @@ public class ExpositorService {
         this.userRepository = userRepository;
     }
 
-    public List<ExpositorResponseDTO> getAll() {
+    @Transactional
+    public ExpositorDTO.Response createExpositor(ExpositorDTO.Create dto) {
+        User user = userRepository.findById(dto.userId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não é EXPOSITOR"));
+        
+        if (user.getRole() != Role.EXPOSITOR) {
+            throw new RuntimeException("Tipo de usuário não é EXPOSITOR");
+        }
+
+        Expositor expositor = Expositor.builder()
+                .user(user)
+                .nome(dto.nome())
+                .tipo(dto.tipo())
+                .linkStandOnline(dto.linkStandOnline())
+                .numeroStandFisico(dto.numeroStandFisico())
+                .build();
+        
+        Expositor saved = expositorRepository.save(expositor);
+        return toDto(saved);
+    }
+
+    public List<ExpositorDTO.Response> getAll() {
         return expositorRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public ExpositorResponseDTO getById(Long id) {
-        Expositor expositor = expositorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expositor not found"));
-        return convertToDTO(expositor);
-    }
-
-    @Transactional
-    public ExpositorResponseDTO createExpositor(NewExpositorDTO dto) {
-        User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        Expositor expositor = new Expositor();
-        expositor.setUser(user);
-        expositor.setNome(dto.nome());
-        expositor.setTipo(dto.tipo());
-        expositor.setLinkStandOnline(dto.linkStandOnline());
-        expositor.setNumeroStandFisico(dto.numeroStandFisico());
-        
-        Expositor savedExpositor = expositorRepository.save(expositor);
-        return convertToDTO(savedExpositor);
-    }
-
-    @Transactional
-    public ExpositorResponseDTO updateExpositor(Long id, NewExpositorDTO dto) {
-        Expositor expositor = expositorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expositor not found"));
-        
-        User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        expositor.setUser(user);
-        expositor.setNome(dto.nome());
-        expositor.setTipo(dto.tipo());
-        expositor.setLinkStandOnline(dto.linkStandOnline());
-        expositor.setNumeroStandFisico(dto.numeroStandFisico());
-        
-        Expositor updatedExpositor = expositorRepository.save(expositor);
-        return convertToDTO(updatedExpositor);
+    public ExpositorDTO.Response getById(Long id) {
+        return expositorRepository.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
     }
 
     @Transactional
     public void deleteExpositor(Long id) {
+        if (!expositorRepository.existsById(id)) {
+            throw new RuntimeException("Expositor não encontrado");
+        }
         expositorRepository.deleteById(id);
     }
 
-    private ExpositorResponseDTO convertToDTO(Expositor expositor) {
-        return ExpositorResponseDTO.builder()
-                .id(expositor.getId())
-                .userId(expositor.getUser().getId())
-                .userEmail(expositor.getUser().getEmail())
-                .nome(expositor.getNome())
-                .tipo(expositor.getTipo())
-                .linkStandOnline(expositor.getLinkStandOnline())
-                .numeroStandFisico(expositor.getNumeroStandFisico())
-                .build();
+    @Transactional
+    public ExpositorDTO.Response updateExpositor(Long id, ExpositorDTO.Update dto) {
+        Expositor expositor = expositorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
+
+        if (dto.nome() != null) {
+            expositor.setNome(dto.nome());
+        }
+        
+        if (dto.tipo() != null) {
+            expositor.setTipo(dto.tipo());
+        }
+        
+        expositor.setLinkStandOnline(dto.linkStandOnline());
+        expositor.setNumeroStandFisico(dto.numeroStandFisico());
+
+        Expositor updated = expositorRepository.save(expositor);
+        return toDto(updated);
+    }
+
+    private ExpositorDTO.Response toDto(Expositor expositor) {
+        return new ExpositorDTO.Response(
+                expositor.getId(),
+                expositor.getUser().getId(),
+                expositor.getUser().getEmail(),
+                expositor.getNome(),
+                expositor.getTipo(),
+                expositor.getLinkStandOnline(),
+                expositor.getNumeroStandFisico()
+        );
     }
 }

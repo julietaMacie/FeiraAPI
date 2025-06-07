@@ -1,15 +1,17 @@
 package com.MacieNhangumele.FeiraAPI.services;
 
-import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteResponseDTO;
-import com.MacieNhangumele.FeiraAPI.DTOs.NewVisitanteDTO;
 import com.MacieNhangumele.FeiraAPI.models.Visitante;
+import com.MacieNhangumele.FeiraAPI.DTOs.VisitanteDTO;
+import com.MacieNhangumele.FeiraAPI.models.Role;
 import com.MacieNhangumele.FeiraAPI.models.User;
 import com.MacieNhangumele.FeiraAPI.repositories.VisitanteRepository;
 import com.MacieNhangumele.FeiraAPI.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class VisitanteService {
@@ -22,60 +24,69 @@ public class VisitanteService {
         this.userRepository = userRepository;
     }
 
-    public List<VisitanteResponseDTO> getAll() {
+    @Transactional
+    public VisitanteDTO.Response createVisitante(VisitanteDTO.Create dto) {
+        User user = userRepository.findById(dto.userId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não é VISITANTE"));
+        
+        if (user.getRole() != Role.VISITANTE) {
+            throw new RuntimeException("Tipo de usuário não é VISITANTE");
+        }
+
+        Visitante visitante = Visitante.builder()
+                .user(user)
+                .nome(dto.nome())
+                .tipoAcesso(dto.tipoAcesso())
+                .build();
+        
+        Visitante saved = visitanteRepository.save(visitante);
+        return toDto(saved);
+    }
+
+    public List<VisitanteDTO.Response> getAll() {
         return visitanteRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public VisitanteResponseDTO getById(Long id) {
-        Visitante visitante = visitanteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitante not found"));
-        return convertToDTO(visitante);
-    }
-
-    @Transactional
-    public VisitanteResponseDTO createVisitante(NewVisitanteDTO dto) {
-        User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        Visitante visitante = new Visitante();
-        visitante.setUser(user);
-        visitante.setNome(dto.nome());
-        visitante.setTipoAcesso(dto.tipoAcesso());
-        
-        Visitante savedVisitante = visitanteRepository.save(visitante);
-        return convertToDTO(savedVisitante);
-    }
-
-    @Transactional
-    public VisitanteResponseDTO updateVisitante(Long id, NewVisitanteDTO dto) {
-        Visitante visitante = visitanteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitante not found"));
-        
-        User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
-        visitante.setUser(user);
-        visitante.setNome(dto.nome());
-        visitante.setTipoAcesso(dto.tipoAcesso());
-        
-        Visitante updatedVisitante = visitanteRepository.save(visitante);
-        return convertToDTO(updatedVisitante);
+    public VisitanteDTO.Response getById(Long id) {
+        return visitanteRepository.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new RuntimeException("Visitante não encontrado"));
     }
 
     @Transactional
     public void deleteVisitante(Long id) {
+        if (!visitanteRepository.existsById(id)) {
+            throw new RuntimeException("Visitante não encontrado");
+        }
         visitanteRepository.deleteById(id);
     }
 
-    private VisitanteResponseDTO convertToDTO(Visitante visitante) {
-        return VisitanteResponseDTO.builder()
-                .id(visitante.getId())
-                .userId(visitante.getUser().getId())
-                .userEmail(visitante.getUser().getEmail())
-                .nome(visitante.getNome())
-                .tipoAcesso(visitante.getTipoAcesso())
-                .build();
+    @Transactional
+    public VisitanteDTO.Response updateVisitante(Long id, VisitanteDTO.Update dto) {
+        Visitante visitante = visitanteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Visitante não encontrado"));
+
+        if (dto.nome() != null) {
+            visitante.setNome(dto.nome());
+        }
+        
+        if (dto.tipoAcesso() != null) {
+            visitante.setTipoAcesso(dto.tipoAcesso());
+        }
+
+        Visitante updated = visitanteRepository.save(visitante);
+        return toDto(updated);
+    }
+
+    private VisitanteDTO.Response toDto(Visitante visitante) {
+        return new VisitanteDTO.Response(
+                visitante.getId(),
+                visitante.getUser().getId(),
+                visitante.getUser().getEmail(),
+                visitante.getNome(),
+                visitante.getTipoAcesso()
+        );
     }
 }
