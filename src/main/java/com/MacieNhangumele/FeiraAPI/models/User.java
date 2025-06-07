@@ -14,19 +14,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
     
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     private Role role;
 
     @Override

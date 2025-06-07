@@ -5,23 +5,20 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Evento {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private String titulo;
+    @Column(nullable = false, length = 100)
+    private String titulo;  
     
     @Column(nullable = false)
-    private LocalDateTime data;
+    private LocalDateTime data;  
     
-    @ManyToOne
-    @JoinColumn(name = "expositor_id", nullable = false)
-    private Expositor expositor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expositor_id")  
+    private Expositor expositor;  
 }

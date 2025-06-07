@@ -4,23 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Estande {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private String localizacao;
+    @Column(nullable = false, length = 100)  
+    private String localizacao;  
     
-    @Column(nullable = false)
-    private String status;
+    @Column(nullable = false, length = 20)
+    private String status;  
     
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expositor_id")
     private Expositor expositor;
 }
