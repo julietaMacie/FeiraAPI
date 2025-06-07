@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class Evento {
+public class Feira {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
@@ -20,5 +20,9 @@ public class Evento {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expositor_id")  
-    private Expositor expositor;  
+    private Expositor expositor;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estande_id")  
+    private Expositor estande; 
 }

@@ -7,23 +7,26 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public class EventoDTO {
-    public record Create(
+public class FeiraDTO {
+    public record CreateFeira(
         @NotBlank String titulo,
         @NotNull LocalDateTime data,
-        @NotNull Long expositorId
+        @NotNull Long expositorId,
+        @NotNull Long estandeId
     ) {}
     
-    public record Update(
+    public record UpdateFeira(
         String titulo,
         LocalDateTime data,
-        Long expositorId
+        Long expositorId,
+        Long estandeId
     ) {}
     
-    public record Response(
+    public record FeiraResponse(
         Long id,
         String titulo,
         LocalDateTime data,
+        Long estandeId,
         Long expositorId,
         String expositorNome
     ) {}
