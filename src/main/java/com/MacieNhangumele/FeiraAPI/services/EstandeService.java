@@ -3,9 +3,10 @@ package com.MacieNhangumele.FeiraAPI.services;
 import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO;
 import com.MacieNhangumele.FeiraAPI.DTOs.EstandeDTO.EstandeResponse;
 import com.MacieNhangumele.FeiraAPI.models.Estande;
-import com.MacieNhangumele.FeiraAPI.models.Expositor;
+import com.MacieNhangumele.FeiraAPI.models.User;
 import com.MacieNhangumele.FeiraAPI.repositories.EstandeRepository;
-import com.MacieNhangumele.FeiraAPI.repositories.ExpositorRepository;
+import com.MacieNhangumele.FeiraAPI.repositories.UserRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,12 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class EstandeService {
     private final EstandeRepository estandeRepository;
-    private final ExpositorRepository expositorRepository;
+    private final UserRepository userRepository;
 
     public EstandeService(EstandeRepository estandeRepository, 
-                        ExpositorRepository expositorRepository) {
+                        UserRepository userRepository) {
         this.estandeRepository = estandeRepository;
-        this.expositorRepository = expositorRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -28,7 +29,7 @@ public class EstandeService {
                 .localizacao(dto.localizacao())
                 .status(dto.status())
                 .expositor(dto.expositorId() != null ? 
-                    expositorRepository.findById(dto.expositorId()).orElse(null) : null)
+                    userRepository.findById(dto.expositorId()).orElse(null) : null)
                 .build();
 
         Estande saved = estandeRepository.save(estande);
@@ -79,7 +80,7 @@ public class EstandeService {
         }
         
         if (dto.expositorId() != null) {
-            Expositor expositor = expositorRepository.findById(dto.expositorId())
+            User expositor = userRepository.findById(dto.expositorId())
                     .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
             estande.setExpositor(expositor);
         } else {

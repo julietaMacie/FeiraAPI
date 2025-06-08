@@ -5,21 +5,21 @@ import java.time.LocalDateTime;
 
 public class InscricaoDTO {
     public record Create(
-        @NotNull Long eventoId,
+        @NotNull Long feiraId,
         @NotNull Long visitanteId
     ) {}
     
     public record Response(
         Long id,
-        Long eventoId,
-        String eventoTitulo,
+        Long feiraId,
+        String feiraTitulo,
         Long visitanteId,
         String visitanteNome,
         LocalDateTime dataInscricao
     ) {}
 
     public record Update(
-        String eventoId,
+        String feiraId,
         LocalDateTime visitanteId
     ) {}
 }

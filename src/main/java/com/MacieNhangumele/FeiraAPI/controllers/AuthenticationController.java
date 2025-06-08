@@ -60,9 +60,15 @@ public class AuthenticationController {
             .email(request.email())
             .password(passwordEncoder.encode(request.password()))
             .role(request.role())
+            .nome(request.nome()) 
+            .tipoAcesso(request.role() == Role.VISITANTE ? request.tipoAcesso() : null)
+            .tipo(request.role() == Role.EXPOSITOR ? request.tipo() : null)
+            .linkStandOnline(request.role() == Role.EXPOSITOR ? request.linkStandOnline() : null)
+            .numeroStandFisico(request.role() == Role.EXPOSITOR ? request.numeroStandFisico() : null)
             .build();
         
         userService.save(newUser);
         return ResponseEntity.ok().build();
     }
+
 }

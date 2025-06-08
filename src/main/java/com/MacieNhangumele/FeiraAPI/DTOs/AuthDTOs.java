@@ -15,6 +15,31 @@ public class AuthDTOs {
     public record RegisterRequest(
         @NotBlank String email,
         @NotBlank String password,
-        @NotNull Role role
-    ) {}
+        @NotBlank String nome,
+        @NotNull Role role,
+        
+        String tipoAcesso,
+        
+        String tipo,
+        String linkStandOnline,
+        String numeroStandFisico
+    ) {
+        public RegisterRequest {
+            if (role == Role.VISITANTE && tipoAcesso == null) {
+                throw new IllegalArgumentException("tipoAcesso é obrigatório para visitantes");
+            }
+            
+            if (role == Role.EXPOSITOR) {
+                if (tipo == null) {
+                    throw new IllegalArgumentException("tipo é obrigatório para expositores");
+                }
+                if (linkStandOnline == null) {
+                    throw new IllegalArgumentException("linkStandOnline é obrigatório para expositores");
+                }
+                if (numeroStandFisico == null) {
+                    throw new IllegalArgumentException("numeroStandFisico é obrigatório para expositores");
+                }
+            }
+        }
+    }
 }

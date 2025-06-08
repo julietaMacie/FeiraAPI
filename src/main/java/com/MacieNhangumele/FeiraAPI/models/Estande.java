@@ -18,6 +18,6 @@ public class Estande {
     private String status;  
     
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expositor_id")
-    private Expositor expositor;
+    @JoinColumn(name = "user_id")
+    private User expositor;
 }

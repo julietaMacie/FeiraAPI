@@ -1,97 +1,58 @@
 package com.MacieNhangumele.FeiraAPI.services;
 
 import com.MacieNhangumele.FeiraAPI.DTOs.ExpositorDTO;
-import com.MacieNhangumele.FeiraAPI.models.Expositor;
 import com.MacieNhangumele.FeiraAPI.models.Role;
 import com.MacieNhangumele.FeiraAPI.models.User;
-import com.MacieNhangumele.FeiraAPI.repositories.ExpositorRepository;
 import com.MacieNhangumele.FeiraAPI.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ExpositorService {
-    private final ExpositorRepository expositorRepository;
     private final UserRepository userRepository;
 
-    public ExpositorService(ExpositorRepository expositorRepository,
-                          UserRepository userRepository) {
-        this.expositorRepository = expositorRepository;
+    public ExpositorService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public ExpositorDTO.ExpositorResponse createExpositor(ExpositorDTO.CreateExpositor dto) {
-        User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou não é EXPOSITOR"));
-        
-        if (user.getRole() != Role.EXPOSITOR) {
-            throw new RuntimeException("Tipo de usuário não é EXPOSITOR");
-        }
-
-        Expositor expositor = Expositor.builder()
-                .user(user)
-                .nome(dto.nome())
-                .tipo(dto.tipo())
-                .linkStandOnline(dto.linkStandOnline())
-                .numeroStandFisico(dto.numeroStandFisico())
-                .build();
-        
-        Expositor saved = expositorRepository.save(expositor);
-        return toDto(saved);
-    }
-
     public List<ExpositorDTO.ExpositorResponse> getAll() {
-        return expositorRepository.findAll().stream()
+        return userRepository.findByRole(Role.EXPOSITOR).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     public ExpositorDTO.ExpositorResponse getById(Long id) {
-        return expositorRepository.findById(id)
-                .map(this::toDto)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
+        
+        if (user.getRole() != Role.EXPOSITOR) {
+            throw new RuntimeException("Utilizador não é um expositor");
+        }
+        
+        return toDto(user);
     }
 
-    @Transactional
     public void deleteExpositor(Long id) {
-        if (!expositorRepository.existsById(id)) {
-            throw new RuntimeException("Expositor não encontrado");
-        }
-        expositorRepository.deleteById(id);
-    }
-
-    @Transactional
-    public ExpositorDTO.ExpositorResponse updateExpositor(Long id, ExpositorDTO.UpdateExpositor dto) {
-        Expositor expositor = expositorRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expositor não encontrado"));
-
-        if (dto.nome() != null) {
-            expositor.setNome(dto.nome());
+        
+        if (user.getRole() != Role.EXPOSITOR) {
+            throw new RuntimeException("Utilizador não é um expositor");
         }
         
-        if (dto.tipo() != null) {
-            expositor.setTipo(dto.tipo());
-        }
-        
-        expositor.setLinkStandOnline(dto.linkStandOnline());
-        expositor.setNumeroStandFisico(dto.numeroStandFisico());
-
-        Expositor updated = expositorRepository.save(expositor);
-        return toDto(updated);
+        userRepository.delete(user);
     }
 
-    private ExpositorDTO.ExpositorResponse toDto(Expositor expositor) {
+    private ExpositorDTO.ExpositorResponse toDto(User user) {
         return new ExpositorDTO.ExpositorResponse(
-                expositor.getId(),
-                expositor.getUser().getId(),
-                expositor.getUser().getEmail(),
-                expositor.getNome(),
-                expositor.getTipo(),
-                expositor.getLinkStandOnline(),
-                expositor.getNumeroStandFisico()
+                user.getId(),
+                user.getEmail(),
+                user.getNome(), 
+                user.getTipo(), 
+                user.getLinkStandOnline(), 
+                user.getNumeroStandFisico() 
         );
     }
 }

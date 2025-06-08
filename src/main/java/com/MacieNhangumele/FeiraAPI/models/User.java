@@ -30,6 +30,19 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 20)
     private Role role;
 
+    private String nome;
+    
+    @Column(name = "tipo_acesso")
+    private String tipoAcesso; 
+    
+    private String tipo; 
+    
+    @Column(name = "link_stand_online")
+    private String linkStandOnline; 
+    
+    @Column(name = "numero_stand_fisico")
+    private String numeroStandFisico; 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

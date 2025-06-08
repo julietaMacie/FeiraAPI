@@ -19,10 +19,10 @@ public class Feira {
     private LocalDateTime data;  
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expositor_id")  
-    private Expositor expositor;
+    @JoinColumn(name = "user_id")  
+    private User expositor;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estande_id")  
-    private Expositor estande; 
+    private Estande estande; 
 }

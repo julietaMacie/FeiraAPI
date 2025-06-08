@@ -1,7 +1,7 @@
 package com.MacieNhangumele.FeiraAPI.controllers;
 
 import com.MacieNhangumele.FeiraAPI.DTOs.InscricaoDTO;
-import com.MacieNhangumele.FeiraAPI.services.InscricaoEventoService;
+import com.MacieNhangumele.FeiraAPI.services.InscricaoFeiraService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -9,11 +9,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/inscricoes")
-public class InscricaoEventoController {
+public class InscricaoFeiraController {
     
-    private final InscricaoEventoService service;
+    private final InscricaoFeiraService service;
 
-    public InscricaoEventoController(InscricaoEventoService service) {
+    public InscricaoFeiraController(InscricaoFeiraService service) {
         this.service = service;
     }
 
@@ -39,10 +39,10 @@ public class InscricaoEventoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/evento/{eventoId}")
-    public ResponseEntity<List<InscricaoDTO.Response>> getByEvento(
-            @PathVariable Long eventoId) {
-        return ResponseEntity.ok(service.getByEventoId(eventoId));
+    @GetMapping("/feira/{feiraId}")
+    public ResponseEntity<List<InscricaoDTO.Response>> getByfeira(
+            @PathVariable Long feiraId) {
+        return ResponseEntity.ok(service.getByFeiraId(feiraId));
     }
 
     @GetMapping("/visitante/{visitanteId}")
