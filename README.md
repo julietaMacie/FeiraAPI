@@ -133,10 +133,17 @@ cd FeiraAPI
 
 -`properties`
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/feira-api  
-spring.datasource.username=seu_usuario  
-spring.datasource.password=sua_senha  
-spring.jpa.hibernate.ddl-auto=update 
+spring.datasource.url=jdbc:mysql://localhost:3306/Feira-API?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+spring.flyway.enabled=true
+
+api.security.token.secret=your-256-bit-secret-here-change-me-in-production
+api.security.token.expiration-hours=2
 
 -`Executar o projeto:`
 
