@@ -132,6 +132,7 @@ cd FeiraAPI
 ### Usando application.properties
 
 -`properties`
+
 spring.datasource.url=jdbc:postgresql://localhost:5432/feira-api  
 spring.datasource.username=seu_usuario  
 spring.datasource.password=sua_senha  
